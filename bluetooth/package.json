@@ -7,7 +7,9 @@
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
     "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve"
+    "ionic:serve": "ionic-app-scripts serve",
+    "install-app": "$ANDROID_HOME/platform-tools/adb install ./platforms/android/build/outputs/apk/android-debug.apk",
+    "deploy-app": "ionic build android && npm run install-app"
   },
   "dependencies": {
     "@angular/common": "4.0.0",
@@ -23,6 +25,7 @@
     "@ionic-native/splash-screen": "3.4.2",
     "@ionic-native/status-bar": "3.4.2",
     "@ionic/storage": "2.0.1",
+    "@types/lodash": "^4.14.62",
     "ionic-angular": "3.0.1",
     "ionicons": "3.0.0",
     "rxjs": "5.1.1",
