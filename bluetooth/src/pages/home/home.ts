@@ -24,11 +24,7 @@ export class HomePage {
     //Verifica se o bluetooth está ativo
     this.bluetoothSerial.isEnabled().then(res => {
       console.log('Bluetooth ativado.');
-      // Lista os dispositivos ja pareados.
-      this.bluetoothSerial.list().then(devices => {
-        console.log(`br.bluetooth: ${JSON.stringify(devices)}`);
-
-      });
+      this.showPairedBluetoothDevices();
     }).catch(res => {
       console.log('Erro ao conectar bluetooth. Ativado ?');
     });
@@ -42,7 +38,7 @@ export class HomePage {
     this.bluetoothSerial.isEnabled().then(res => {
       console.log('Bluetooth ativado.');
       // Lista os dispositivos ja pareados.
-      this.showBluetoothDevices();
+      this.showUnpairedBluetoothDevices();
     }).catch(res => {
       //console.log('Erro ao conectar bluetooth. Ativado ?');
       let toast = this.toastCtrl.create({
@@ -53,10 +49,55 @@ export class HomePage {
     });
   }
 
+  send(value) {
+    this.bluetoothSerial.isConnected().then(data => {
+      this.bluetoothSerial.write(value);
+    }).catch(err => {
+      let toast = this.toastCtrl.create({
+        message: 'Dispositivo não conectado.',
+        showCloseButton: true
+      });
+      toast.present();
+    });
+  }
+
+  private showPairedBluetoothDevices() {
+    // Lista os dispositivos ja pareados.
+    this.bluetoothSerial.list().then(devices => {
+      let alertBDevices = this.alertCtrl.create();
+      alertBDevices.setTitle('Dispositivos Bluetooth Pareados');
+      devices.forEach(device => {
+        alertBDevices.addInput({
+          type: 'radio',
+          label: `${device.name} - ${device.address}`,
+          value: device.address
+        });
+      });
+      alertBDevices.addButton('Cancelar');
+      alertBDevices.addButton({
+        text: 'Conectar',
+        handler: (data: string) => {
+          this.connectToDevice(data);
+        }
+      })
+      alertBDevices.present();
+    });
+  }
+
+
+  private connectToDevice(mac: string) {
+    console.log(`[bluetooth] Tetando conexão com MAC: ${mac}`);
+    this.bluetoothSerial.connect(mac).subscribe(
+      (res) => console.log('Conectado com sucesso.'),
+      (err) => console.log(`[bluetooth] Erro ao conetar: ${err}`),
+      () => console.log('Conexão completa.') 
+    );
+  }
+
   /**
    * Exibe um alert com os dispositivos bluetooth disponíveis.
    */
-  private showBluetoothDevices() {
+  private showUnpairedBluetoothDevices() {
     let loading = this.loadingCtrl.create({
       content: 'Buscando dispositivos...'
     });
@@ -71,9 +112,9 @@ export class HomePage {
           label: `${device.name} - ${device.address}`,
           value: device.address
         });
-        alertBDevices.addButton('Cancelar');
-        alertBDevices.present();
       });
+      alertBDevices.addButton('Cancelar');
+      alertBDevices.present();
     });
   }
 
