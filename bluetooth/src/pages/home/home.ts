@@ -68,7 +68,7 @@ export class HomePage {
       devices.forEach(device => {
         alertBDevices.addInput({
           type: 'radio',
-          label: `${device.name} ${device.address}`,
+          label: `${device.name} - ${device.address}`,
           value: device.address
         });
         alertBDevices.addButton('Cancelar');
