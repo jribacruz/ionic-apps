@@ -12,7 +12,7 @@
     "deploy-app": "ionic build android && npm run install-app"
   },
   "dependencies": {
-    "@angular/common": "4.0.0",
+    "@angular/common": "19.2.16",
     "@angular/compiler": "4.0.0",
     "@angular/compiler-cli": "4.0.0",
     "@angular/core": "4.0.0",
